@@ -25,7 +25,8 @@ import {
 	AfterTheDeadlineSettings,
 	MarkdownSettings,
 	VerificationToolsSettings,
-	SitemapsSettings
+	SitemapsSettings,
+	WordAdsSettings
 } from 'components/module-settings/';
 import ExternalLink from 'components/external-link';
 
@@ -93,6 +94,8 @@ export const AllModuleSettings = React.createClass( {
 				return ( <VerificationToolsSettings module={ module }  /> );
 			case 'sitemaps':
 				return ( <SitemapsSettings module={ module } { ...this.props } /> );
+			case 'wordads':
+				return ( <WordAdsSettings module={ module } /> );
 			case 'gravatar-hovercards':
 			case 'contact-form':
 			case 'latex':

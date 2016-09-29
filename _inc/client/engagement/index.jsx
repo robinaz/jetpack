@@ -72,6 +72,7 @@ export const Engagement = ( props ) => {
 		[ 'sitemaps', getModule( 'sitemaps' ).name, sitemapsDesc, getModule( 'sitemaps' ).learn_more_button ],
 		[ 'enhanced-distribution', getModule( 'enhanced-distribution' ).name, getModule( 'enhanced-distribution' ).description, getModule( 'enhanced-distribution' ).learn_more_button ],
 		[ 'verification-tools', getModule( 'verification-tools' ).name, getModule( 'verification-tools' ).description, getModule( 'verification-tools' ).learn_more_button ],
+		[ 'wordads', getModule( 'wordads' ).name, getModule( 'wordads' ).description, getModule( 'wordads' ).learn_more_button ],
 	],
 		nonAdminAvailable = [ 'publicize' ];
 	// Put modules available to non-admin user at the top of the list.

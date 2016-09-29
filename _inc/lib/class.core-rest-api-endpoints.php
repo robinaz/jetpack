@@ -1380,6 +1380,29 @@ class Jetpack_Core_Json_Api_Endpoints {
 				);
 				break;
 
+			case 'wordads':
+				$options = array(
+					'enable_header_ad' => array(
+						'description'        => esc_html__( 'Display an ad unit at the top of each page.', 'jetpack' ),
+						'type'               => 'boolean',
+						'default'            => 0,
+						'validate_callback'  => __CLASS__ . '::validate_boolean',
+					),
+					'wordads_tos' => array(
+						'description'        => esc_html__( 'Has user accepted WordAds Terms of Service?', 'jetpack' ),
+						'type'               => 'boolean',
+						'default'            => 0,
+						'validate_callback'  => __CLASS__ . '::validate_boolean',
+					),
+					'wordads_approved' => array(
+						'description'        => esc_html__( 'Is site approved for WordAds?', 'jetpack' ),
+						'type'               => 'boolean',
+						'default'            => 0,
+						'validate_callback'  => __CLASS__ . '::validate_boolean',
+					),
+				);
+				break;
+
 			// Stats
 			/*
 				Example:

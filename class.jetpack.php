@@ -51,6 +51,7 @@ class Jetpack {
 		'jetpack_social_media_icons_widget',
 		'jetpack-top-posts-widget',
 		'jetpack_image_widget',
+		'wordads',
 	);
 
 	public $plugins_to_deactivate = array(

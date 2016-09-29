@@ -622,3 +622,18 @@ function jetpack_xml_sitemap_more_info() {
 }
 add_action( 'jetpack_module_more_info_sitemaps', 'jetpack_xml_sitemap_more_info' );
 // XML Sitemap: STOP
+
+/**
+ * WordAds
+ */
+function jetpack_wordads_more_link() {
+	echo 'https://wordads.co/';
+}
+add_action( 'jetpack_learn_more_button_wordads', 'jetpack_wordads_more_link' );
+
+function jetpack_wordads_more_info() {
+	esc_html_e(
+		'WordAds is a service from Automattic that extends our advertising scale and know-how to any eligible site using WordPress. Earn income from your site with high quality ads and strong rates from advertisers.'
+		, 'jetpack' );
+}
+add_action( 'jetpack_module_more_info_wordads', 'jetpack_wordads_more_info' );

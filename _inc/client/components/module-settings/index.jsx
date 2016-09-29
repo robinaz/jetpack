@@ -794,3 +794,51 @@ export let SitemapsSettings = React.createClass( {
 } );
 
 SitemapsSettings = moduleSettingsForm( SitemapsSettings );
+
+export let WordAdsSettings = React.createClass( {
+	render() {
+		return (
+			( this.props.getOptionValue( 'wordads_tos' ) && this.props.getOptionValue( 'wordads_approved' ) )
+				? <form onSubmit={ this.props.onSubmit } >
+					<FormFieldset>
+						<ModuleSettingCheckbox
+							name={ 'enable_header_ad' }
+							{ ...this.props }
+							label={ __( 'Display an ad unit at the top of each page.' ) } />
+						<FormButton
+							className="is-primary"
+							isSubmitting={ this.props.isSavingAnyOption() }
+							disabled={ this.props.shouldSaveButtonBeDisabled() } />
+					</FormFieldset>
+				</form>
+				: <div>
+					<p>{ __( 'WordAds still requires the following actions to activate:' ) }</p>
+					<ul>
+						{ ! this.props.getOptionValue( 'wordads_approved' )
+							? <li>
+								{ __( 'We are still waiting for your {{a}}application{{/a}} to be approved.', {
+									components: {
+										a: <a href="https://wordads.co/signup/" target="_blank" />
+									}
+								} ) }
+							</li>
+							: null
+						}
+						{ ! this.props.getOptionValue( 'wordads_tos' )
+							? <li>
+								{ __( 'Please accept the {{a}}WordAds Terms of Service{{/a}} in your {{b}}Settings{{/b}}.', {
+									components: {
+										a: <a href="https://wordpress.com/tos-wordads/" target="_blank" />,
+										b: <a href="https://wordads.co/signup/" target="_blank" />
+									}
+								} ) }
+							</li>
+							: null
+						}
+					</ul>
+				</div>
+		);
+	}
+} );
+
+WordAdsSettings = moduleSettingsForm( WordAdsSettings );
