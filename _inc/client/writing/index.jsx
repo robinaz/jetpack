@@ -3,9 +3,11 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import FoldableCard from 'components/foldable-card';
+import Card from 'components/card';
+import SectionHeader from 'components/section-header';
 import Button from 'components/button';
 import Gridicon from 'components/gridicon';
+import TagsInput from 'components/tags-input';
 import { translate as __ } from 'i18n-calypso';
 import includes from 'lodash/includes';
 import analytics from 'lib/analytics';
@@ -22,106 +24,166 @@ import {
 	getModule as _getModule,
 	getModules
 } from 'state/modules';
+import {
+	FormFieldset,
+	FormLegend,
+	FormLabel,
+	FormButton
+} from 'components/forms';
+import {
+	ModuleSettingRadios,
+	ModuleSettingCheckbox,
+	ModuleSettingMultipleSelectCheckboxes
+} from 'components/module-settings/form-components';
 import { ModuleToggle } from 'components/module-toggle';
 import { AllModuleSettings } from 'components/module-settings/modules-per-tab-page';
 import { isUnavailableInDevMode } from 'state/connection';
 import { userCanManageModules as _userCanManageModules } from 'state/initial-state';
+import { ModuleSettingsForm as moduleSettingsForm } from 'components/module-settings/module-settings-form';
 
-export const Writing = ( props ) => {
-	let {
-		toggleModule,
-		isModuleActivated,
-		isTogglingModule,
-		getModule,
-		userCanManageModules
-	} = props,
-		isAdmin = userCanManageModules,
-		moduleList = Object.keys( props.moduleList );
-	/**
-	 * Array of modules that directly map to a card for rendering
-	 * @type {Array}
-	 */
-	let cards = [
-		[ 'markdown', getModule( 'markdown' ).name, getModule( 'markdown' ).description, getModule( 'markdown' ).learn_more_button ],
-		[ 'after-the-deadline', getModule( 'after-the-deadline' ).name, getModule( 'after-the-deadline' ).description, getModule( 'after-the-deadline' ).learn_more_button ],
-		[ 'photon', getModule( 'photon' ).name, getModule( 'photon' ).description, getModule( 'photon' ).learn_more_button ],
-		[ 'custom-content-types', getModule( 'custom-content-types' ).name, getModule( 'custom-content-types' ).description, getModule( 'custom-content-types' ).learn_more_button ],
-		[ 'infinite-scroll', getModule( 'infinite-scroll' ).name, getModule( 'infinite-scroll' ).description, getModule( 'infinite-scroll' ).learn_more_button ],
-		[ 'minileven', getModule( 'minileven' ).name, getModule( 'minileven' ).description, getModule( 'minileven' ).learn_more_button ],
-		[ 'post-by-email', getModule( 'post-by-email' ).name, getModule( 'post-by-email' ).description, getModule( 'post-by-email' ).learn_more_button ]
-		],
-		nonAdminAvailable = [ 'after-the-deadline', 'post-by-email' ];
-	// Put modules available to non-admin user at the top of the list.
-	if ( ! isAdmin ) {
-		let cardsCopy = cards.slice();
-		cardsCopy.reverse().forEach( ( element ) => {
-			if ( includes( nonAdminAvailable, element[0] ) ) {
-				cards.unshift( element );
+export const Writing = React.createClass( {
+	displayName: 'WritingSettings',
+
+	propTypes: {
+	},
+
+	getMarkdownSettings() {
+		return React.createClass( {
+			render() {
+				return (
+					<form onSubmit={ this.props.onSubmit } >
+						<FormFieldset>
+							<ModuleSettingCheckbox
+name={ 'wpcom_publish_comments_with_markdown' }
+{ ...this.props }
+label={ __( 'Use Markdown for comments' ) } />
+						</FormFieldset>
+					</form>
+				);
 			}
 		} );
-		cards = cards.filter( ( element, index ) => cards.indexOf( element ) === index );
+	},
+
+	getAfterTheDeadlineSetting() {
+		return React.createClass( {
+			render() {
+				return (
+					<form onSubmit={ this.props.onSubmit } >
+						<FormFieldset>
+							<span className="jp-form-setting-explanation">
+								{ __( 'Automatically proofread content when: ' ) }
+							</span>
+							<ModuleSettingCheckbox
+name={ 'onpublish' }
+{ ...this.props }
+label={ __( 'A post or page is first published' ) } />
+							<ModuleSettingCheckbox
+name={ 'onupdate' }
+{ ...this.props }
+label={ __( 'A post or page is updated' ) } />
+						</FormFieldset>
+						<FormFieldset>
+							<FormLegend> { __( 'Automatic Language Detection' ) }
+							</FormLegend>
+							<span className="jp-form-setting-explanation">
+								{ __(
+									  'The proofreader supports English, French, ' +
+									  'German, Portuguese and Spanish.'
+								  ) }
+							</span>
+							<ModuleSettingCheckbox
+name={ 'guess_lang' }
+{ ...this.props }
+label={ __( 'Use automatically detected language to proofread posts and pages' ) } />
+						</FormFieldset>
+						<FormFieldset>
+							<FormLegend> { __( 'English Options' ) } </FormLegend>
+							<span className="jp-form-setting-explanation">
+								{ __( 'Enable proofreading for the following grammar and style rules: ' ) }
+							</span>
+							<ModuleSettingCheckbox
+name={ 'Bias Language' }
+{ ...this.props }
+label={ __( 'Bias Language' ) } />
+							<ModuleSettingCheckbox
+name={ 'Cliches' }
+{ ...this.props }
+label={ __( 'Clichés' ) } />
+							<ModuleSettingCheckbox
+name={ 'Complex Expression' }
+{ ...this.props }
+label={ __( 'Complex Phrases' ) } />
+							<ModuleSettingCheckbox
+name={ 'Diacritical Marks' }
+{ ...this.props }
+label={ __( 'Diacritical Marks' ) } />
+							<ModuleSettingCheckbox
+name={ 'Double Negative' }
+{ ...this.props }
+label={ __( 'Double Negatives' ) } />
+							<ModuleSettingCheckbox
+name={ 'Hidden Verbs' }
+{ ...this.props }
+label={ __( 'Hidden Verbs' ) } />
+							<ModuleSettingCheckbox
+name={ 'Jargon Language' }
+{ ...this.props }
+label={ __( 'Jargon' ) } />
+							<ModuleSettingCheckbox
+name={ 'Passive voice' }
+{ ...this.props }
+label={ __( 'Passive Voice' ) } />
+							<ModuleSettingCheckbox
+name={ 'Phrases to Avoid' }
+{ ...this.props }
+label={ __( 'Phrases to Avoid' ) } />
+							<ModuleSettingCheckbox
+name={ 'Redundant Expression' }
+{ ...this.props }
+label={ __( 'Redundant Phrases' ) } />
+						</FormFieldset>
+						<FormFieldset>
+							<FormLegend>
+								{ __( 'Ignored Phrases' ) }
+							</FormLegend>
+							<TagsInput
+name="ignored_phrases"
+placeholder={ __( 'Add a phrase' ) }
+value={
+	(
+		'undefined' !== typeof this.props.getOptionValue( 'ignored_phrases' )
+		&& '' !== this.props.getOptionValue( 'ignored_phrases' )
+	) ?
+	   this.props.getOptionValue( 'ignored_phrases' ).split( ',' ) :
+	   []
+	  }
+onChange={ this.props.onOptionChange } />
+						</FormFieldset>
+					</form>
+				)
+			}
+		} );
+	},
+
+	render() {
+		let Markdown = moduleSettingsForm( this.getMarkdownSettings() );
+		let AfterTheDeadline = moduleSettingsForm( this.getAfterTheDeadlineSetting() );
+
+		return (
+			<div>
+				<SectionHeader label={ __( 'Composing', { context: 'Settings header' } ) }>
+					<Button primary>
+						{ __( 'Save', { context: 'Button caption' } ) }
+					</Button>
+				</SectionHeader>
+				<Card>
+					<Markdown module={ this.props.getModule( 'markdown' ) } />
+					<AfterTheDeadline module={ this.props.getModule( 'atd' ) } />
+				</Card>
+			</div>
+		);
 	}
-	cards = cards.map( ( element, i ) => {
-		if ( ! includes( moduleList, element[0] ) ) {
-			return null;
-		}
-		var unavailableInDevMode = props.isUnavailableInDevMode( element[0] ),
-			customClasses = unavailableInDevMode ? 'devmode-disabled' : '',
-			toggle = '',
-			adminAndNonAdmin = isAdmin || includes( nonAdminAvailable, element[0] );
-		if ( unavailableInDevMode ) {
-			toggle = __( 'Unavailable in Dev Mode' );
-		} else if ( isAdmin ) {
-			toggle = <ModuleToggle slug={ element[0] }
-				activated={ isModuleActivated( element[0] ) }
-				toggling={ isTogglingModule( element[0] ) }
-				toggleModule={ toggleModule } />;
-		}
-
-		if ( 1 === element.length ) {
-			return ( <h1 key={ `section-header-${ i }` /* https://fb.me/react-warning-keys */ } >{ element[0] }</h1> );
-		}
-
-		return adminAndNonAdmin ? (
-			<FoldableCard
-				className={ customClasses }
-				key={ `module-card_${element[0]}` /* https://fb.me/react-warning-keys */ }
-				header={ element[1] }
-				subheader={ element[2] }
-				summary={ toggle }
-				expandedSummary={ toggle }
-				clickableHeaderText={ true }
-				onOpen={ () => analytics.tracks.recordEvent( 'jetpack_wpa_settings_card_open',
-					{
-						card: element[0],
-						path: props.route.path
-					}
-				) }
-			>
-				{ isModuleActivated( element[0] ) || 'scan' === element[0] ?
-					<AllModuleSettings module={ getModule( element[0] ) } siteAdminUrl={ props.siteAdminUrl } /> :
-					// Render the long_description if module is deactivated
-					<div dangerouslySetInnerHTML={ renderLongDescription( getModule( element[0] ) ) } />
-				}
-				<div className="jp-module-settings__read-more">
-					<Button borderless compact href={ element[3] }><Gridicon icon="help-outline" /><span className="screen-reader-text">{ __( 'Learn More' ) }</span></Button>
-				</div>
-			</FoldableCard>
-		) : false;
-	} );
-
-	return (
-		<div>
-			{ cards }
-		</div>
-	);
-};
-
-function renderLongDescription( module ) {
-	// Rationale behind returning an object and not just the string
-	// https://facebook.github.io/react/tips/dangerously-set-inner-html.html
-	return { __html: module.long_description };
-}
+} );
 
 export default connect(
 	( state ) => {

@@ -22,7 +22,6 @@ import {
 	TiledGallerySettings,
 	PostByEmailSettings,
 	CustomContentTypesSettings,
-	AfterTheDeadlineSettings,
 	MarkdownSettings,
 	VerificationToolsSettings,
 	SitemapsSettings
@@ -45,10 +44,6 @@ export const AllModuleSettings = React.createClass( {
 				return ( <PostByEmailSettings module={ module }  /> );
 			case 'custom-content-types':
 				return ( <CustomContentTypesSettings module={ module }  /> );
-			case 'after-the-deadline':
-				return ( <AfterTheDeadlineSettings module={ module }  /> );
-			case 'markdown':
-				return ( <MarkdownSettings module={ module }  /> );
 			case 'tiled-gallery':
 				return ( <TiledGallerySettings module={ module }  /> );
 			case 'minileven':
