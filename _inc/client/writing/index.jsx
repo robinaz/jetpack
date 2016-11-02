@@ -64,6 +64,12 @@ export const Writing = React.createClass( {
 					);
 				},
 
+				toggleMarkdown() {
+				},
+
+				toggleAtd() {
+				},
+
 				render() {
 					return (
 						<form>
@@ -74,18 +80,33 @@ export const Writing = React.createClass( {
 									isSubmitting={ this.props.isSavingAnyOption() }
 									onClick={ this.props.onSubmit }
 								>
-									{ __( 'Save', { context: 'Button caption' } ) }
+									{
+										this.props.isSavingAnyOption() ?
+										__( 'Saving…', { context: 'Button caption' } ) :
+										__( 'Save', { context: 'Button caption' } )
+									}
 								</Button>
 							</SectionHeader>
 							<Card>
 								<FormFieldset>
-									{
-										this.getCheckbox(
-											'wpcom_publish_comments_with_markdown',
-											__( 'Use Markdown for comments' ),
-											true
-										)
-									}
+									<ModuleToggle slug={ 'markdown' }
+												  compact
+												  activated={ this.props.markdown }
+												  toggling={ this.toggleMarkdown }>
+										<span className="jp-form-toggle-explanation">
+											{ this.props.getModule( 'markdown' ).description }
+										</span>
+									</ModuleToggle>
+								</FormFieldset>
+								<FormFieldset>
+									<ModuleToggle slug={ 'after-the-deadline' }
+												  compact
+												  activated={ this.props.atd }
+												  toggling={ this.toggleAtd }>
+										<span className="jp-form-toggle-explanation">
+											{ this.props.getModule( 'after-the-deadline' ).description }
+										</span>
+									</ModuleToggle>
 								</FormFieldset>
 								<FormFieldset>
 									<span className="jp-form-setting-explanation">
@@ -151,7 +172,12 @@ export const Writing = React.createClass( {
 		);
 
 		return (
-			<Composing module={ [ atd, markdown ] } />
+			<Composing
+				module={ [ atd, markdown ] }
+				markdown={ this.props.isModuleActivated( 'markdown' )}
+atd={ this.props.isModuleActivated( 'after-the-deadline' )}
+				getModule={ this.props.getModule }
+			/>
 		);
 	}
 } );
