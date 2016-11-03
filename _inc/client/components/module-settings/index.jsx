@@ -829,7 +829,7 @@ export let WordAdsSettings = React.createClass( {
 								{ __( 'Please accept the {{a}}WordAds Terms of Service{{/a}} in your {{b}}Settings{{/b}}.', {
 									components: {
 										a: <a href="https://wordpress.com/tos-wordads/" target="_blank" />,
-										b: <a href="https://wordads.co/signup/" target="_blank" />
+										b: <a href={'https://wordpress.com/ads/settings/' + window.location.host } target="_blank" />
 									}
 								} ) }
 							</li>
