@@ -63,7 +63,7 @@ export const Writing = React.createClass( {
 				},
 
 				toggleModule( name, value ) {
-					this.props.updateFormStateOptionValue( name, !!value ? false : true );
+					this.props.updateFormStateOptionValue( name, !value );
 				},
 
 				getAtdSettings() {
