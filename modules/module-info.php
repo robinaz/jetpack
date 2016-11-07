@@ -625,3 +625,18 @@ function jetpack_xml_sitemap_more_info() {
 }
 add_action( 'jetpack_module_more_info_sitemaps', 'jetpack_xml_sitemap_more_info' );
 // XML Sitemap: STOP
+
+/**
+ * Google Analytics
+ */
+function jetpack_google_analytics_more_link() {
+	echo 'https://support.wordpress.com/google-analytics/';
+}
+add_action( 'jetpack_learn_more_button_google-analytics', 'jetpack_google_analytics_more_link' );
+
+function jetpack_google_analytics_more_info() {
+	esc_html_e(
+		'Track website statistics with Google Analytics for a deeper understanding of your website visitors and customers.'
+		, 'jetpack' );
+}
+add_action( 'jetpack_module_more_info_google-analytics', 'jetpack_google_analytics_more_info' );

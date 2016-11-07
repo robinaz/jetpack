@@ -26,7 +26,8 @@ import {
 	MarkdownSettings,
 	VerificationToolsSettings,
 	SitemapsSettings,
-	VideoPressSettings
+	VideoPressSettings,
+	GoogleAnalyticsSettings
 } from 'components/module-settings/';
 import ExternalLink from 'components/external-link';
 
@@ -106,6 +107,8 @@ export const AllModuleSettings = React.createClass( {
 				return ( <VerificationToolsSettings module={ module }  /> );
 			case 'sitemaps':
 				return ( <SitemapsSettings module={ module } { ...this.props } /> );
+			case 'google-analytics':
+				return ( <GoogleAnalyticsSettings { ...{ ...this.props, module } } /> );
 			case 'gravatar-hovercards':
 			case 'contact-form':
 			case 'latex':
