@@ -13,6 +13,8 @@ import analytics from 'lib/analytics';
 /**
  * Internal dependencies
  */
+import QuerySite from 'components/data/query-site';
+import ProStatus from 'pro-status';
 import {
 	isModuleActivated as _isModuleActivated,
 	activateModule,
@@ -22,6 +24,7 @@ import {
 	getModule as _getModule,
 	getModules
 } from 'state/modules';
+import { getSitePlan } from 'state/site';
 import { ModuleToggle } from 'components/module-toggle';
 import { AllModuleSettings } from 'components/module-settings/modules-per-tab-page';
 import { isUnavailableInDevMode } from 'state/connection';
@@ -37,7 +40,8 @@ export const Engagement = ( props ) => {
 		toggleModule,
 		isModuleActivated,
 		isTogglingModule,
-		getModule
+		getModule,
+		sitePlan
 	} = props,
 		isAdmin = props.userCanManageModules,
 		sitemapsDesc = getModule( 'sitemaps' ).description,
@@ -85,6 +89,7 @@ export const Engagement = ( props ) => {
 		} );
 		cards = cards.filter( ( element, index ) => cards.indexOf( element ) === index );
 	}
+
 	cards = cards.map( ( element ) => {
 		if ( ! includes( moduleList, element[0] ) ) {
 			return null;
@@ -93,7 +98,10 @@ export const Engagement = ( props ) => {
 			customClasses = unavailableInDevMode ? 'devmode-disabled' : '',
 			toggle = '',
 			adminAndNonAdmin = isAdmin || includes( nonAdminAvailable, element[0] ),
-			isModuleActive = isModuleActivated( element[0] );
+			isModuleActive = isModuleActivated( element[0] ),
+			isPro = 'google-analytics' === element[0],
+			proProps = {};
+
 		if ( unavailableInDevMode ) {
 			toggle = __( 'Unavailable in Dev Mode' );
 		} else if ( isAdmin ) {
@@ -102,6 +110,25 @@ export const Engagement = ( props ) => {
 						toggling={ isTogglingModule( element[0] ) }
 						toggleModule={ toggleModule } />;
 		}
+
+		if ( isPro && props.sitePlan.product_slug !== 'jetpack_business' ) {
+			proProps = {
+				module: element[0],
+				configure_url: ''
+			};
+			toggle = <ProStatus proFeature={ element[0] } siteAdminUrl={ props.siteAdminUrl } />;
+
+			element[1] = <span>{ element[1] }<Button compact href="#/plans">{ __( 'Pro' ) }</Button></span>;
+		}
+
+		if ( element[0] === 'google-analytics' && sitePlan.product_slug !== 'jetpack_business' ) {
+			isModuleActive = false;
+		}
+
+		let moduleSettings = isModuleActive
+			? <AllModuleSettings module={ getModule( element[0] ) } adminUrl={ props.getSiteAdminUrl() } />
+			: <div dangerouslySetInnerHTML={ renderLongDescription( getModule( element[0] ) ) } />;
+
 		return adminAndNonAdmin ? (
 			<FoldableCard
 				className={ customClasses }
@@ -118,12 +145,7 @@ export const Engagement = ( props ) => {
 					}
 				) }
 			>
-				{
-					isModuleActive ?
-						<AllModuleSettings module={ getModule( element[0] ) } adminUrl={ props.getSiteAdminUrl() } /> :
-						// Render the long_description if module is deactivated
-						<div dangerouslySetInnerHTML={ renderLongDescription( getModule( element[0] ) ) } />
-				}
+				{ moduleSettings }
 				<div className="jp-module-settings__read-more">
 					<Button borderless compact href={ element[3] }><Gridicon icon="help-outline" /><span className="screen-reader-text">{ __( 'Learn More' ) }</span></Button>
 					{
@@ -160,6 +182,7 @@ export const Engagement = ( props ) => {
 	} );
 	return (
 		<div>
+			<QuerySite />
 			{ cards }
 		</div>
 	);
@@ -181,6 +204,7 @@ export default connect(
 			getSiteRawUrl: () => getSiteRawUrl( state ),
 			getSiteAdminUrl: () => getSiteAdminUrl( state ),
 			isSitePublic: () => isSitePublic( state ),
+			sitePlan: getSitePlan( state ),
 			userCanManageModules: _userCanManageModules( state ),
 			moduleList: getModules( state )
 		};

@@ -1482,16 +1482,13 @@ class Jetpack_Core_Json_Api_Endpoints {
 			),
 
 			// Google Analytics
-			case 'google-analytics':
-				$options = array(
-					'google_analytics_tracking_id' => array(
-						'description'        => esc_html__( 'Google Analytics', 'jetpack' ),
-						'type'               => 'string',
-						'default'            => '',
-						'validate_callback'  => __CLASS__ . '::validate_alphanum',
-					),
-				);
-				break;
+			'google_analytics_tracking_id' => array(
+				'description'        => esc_html__( 'Google Analytics', 'jetpack' ),
+				'type'               => 'string',
+				'default'            => '',
+				'validate_callback'  => __CLASS__ . '::validate_alphanum',
+				'jp_group'           => 'google-analytics',
+			),
 
 			// Stats
 			'admin_bar' => array(
@@ -2034,9 +2031,11 @@ class Jetpack_Core_Json_Api_Endpoints {
 
 			case 'google-analytics':
 				$wga = get_option( 'wga' );
+				$code = '';
 				if ( is_array( $wga ) && array_key_exists( 'code', $wga ) ) {
-					$options[ 'google_analytics_tracking_id' ][ 'current_value' ] = $wga[ 'code' ];
+					 $code = $wga[ 'code' ];
 				}
+				$options[ 'google_analytics_tracking_id' ][ 'current_value' ] = $code;
 				break;
 
 			case 'sharedaddy':
